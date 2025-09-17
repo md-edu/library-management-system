@@ -2,6 +2,7 @@ from user import User
 from student import Student
 from teacher import Teacher
 from book import Book
+from librarian import Librarian
 
 class Library:
     def __init__(self):
@@ -102,3 +103,22 @@ class Library:
         print("\n=== All Books in Library ===")
         for book_id, book in self.books.items():
             print(book)
+
+    def register_user(self, user_type, user_id, name, password, extra_field=None):
+        if user_id in self.users:
+            print("User ID already exists!")
+            return False
+        
+        if user_type == "student":
+            self.users[user_id] = Student(user_id, name, password, extra_field)
+        elif user_type == "teacher":
+            self.users[user_id] = Teacher(user_id, name, password, extra_field)
+        elif user_type == "librarian":
+            self.users[user_id] = Librarian(user_id, name, password)
+        else:
+            print("Invalid user type!")
+            return False
+        
+        self.passwords[user_id] = password
+        print(f"User {name} registered successfully!")
+        return True

@@ -3,6 +3,7 @@ from user import User
 from student import Student
 from teacher import Teacher
 from book import Book
+from librarian import Librarian
 
 def main():
     library = Library()
@@ -23,8 +24,9 @@ def main():
     library.register_user("student", "S003", "Charlie Davis", "pass3", "Computer Science")
     library.borrow_book("S003", "B002")
 
-    library.register_user("teacher", "T001", "Dr. Robert Brown", "pass456", "Computer Science")
-    
+    library.register_user("teacher", "T001", "Dr. Robert Brown", "pass4", "Computer Science")
+    library.register_user("librarian", "L001", "Ms. Linda Green", "pass5")    
+
     current_user = None
     
     while True:
@@ -51,6 +53,14 @@ def main():
                 print("7. View My Borrowed Books")
                 print("8. Logout")
                 print("9. Exit")
+            elif isinstance(current_user, Librarian):
+                print("1. Add Book")
+                print("2. Remove Book")
+                print("3. Register User")
+                print("4. Search Books")
+                print("5. View All Books")
+                print("6. Logout")
+                print("7. Exit")
             else:
                 print("1. Search Books")
                 print("2. Borrow Book")
@@ -219,8 +229,35 @@ def main():
                 else:
                     print("Invalid choice! Please try again.")
             
-            else:  # Generic user (shouldn't happen with current implementation)
-                if choice == "1":  # Search Books
+            elif isinstance(current_user, Librarian):
+                if choice == "1":  # Add Book
+                    book_id = input("Enter book ID: ")
+                    title = input("Enter book title: ")
+                    author = input("Enter book author: ")
+                    total_copies = int(input("Enter total copies: "))
+                    library.add_book(book_id, title, author, total_copies)
+                
+                elif choice == "2":  # Remove Book
+                    library.display_all_books()
+                    book_id = input("Enter book ID to remove: ")
+                    library.remove_book(book_id)
+                
+                elif choice == "3":  # Register User
+                    user_type = input("Enter user type (student/teacher/librarian): ").lower()
+                    user_id = input("Enter user ID: ")
+                    name = input("Enter name: ")
+                    password = input("Enter password: ")
+                    
+                    if user_type == "student":
+                        major = input("Enter major: ")
+                        library.register_user(user_type, user_id, name, password, major)
+                    elif user_type == "teacher":
+                        subject = input("Enter subject: ")
+                        library.register_user(user_type, user_id, name, password, subject)
+                    else:
+                        print("Invalid user type!")
+                
+                elif choice == "4":  # Search Books
                     title = input("Enter book title to search: ")
                     results = library.search_book(title)
                     if results:
@@ -230,33 +267,8 @@ def main():
                     else:
                         print("No books found with that title.")
                 
-                elif choice == "2":  # Borrow Book
+                elif choice == "5":  # View All Books
                     library.display_all_books()
-                    book_id = input("Enter book ID to borrow: ")
-                    library.borrow_book(current_user.user_id, book_id)
-                
-                elif choice == "3":  # Return Book
-                    if not current_user.borrowed_books:
-                        print("You haven't borrowed any books!")
-                    else:
-                        print("Books you've borrowed:")
-                        for book_id in current_user.borrowed_books:
-                            if book_id in library.books:
-                                print(library.books[book_id])
-                        book_id = input("Enter book ID to return: ")
-                        library.return_book(current_user.user_id, book_id)
-                
-                elif choice == "4":  # View All Books
-                    library.display_all_books()
-                
-                elif choice == "5":  # View My Borrowed Books
-                    if not current_user.borrowed_books:
-                        print("You haven't borrowed any books!")
-                    else:
-                        print("Books you've borrowed:")
-                        for book_id in current_user.borrowed_books:
-                            if book_id in library.books:
-                                print(library.books[book_id])
                 
                 elif choice == "6":  # Logout
                     current_user = None
