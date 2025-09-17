@@ -11,7 +11,18 @@ def main():
     library.add_book("B001", "Python Programming", "John Smith", 5)
     library.add_book("B002", "Data Structures", "Jane Doe", 3)
     library.add_book("B003", "Algorithms", "Robert Johnson", 1)
-    library.register_user("student", "S001", "Alice Johnson", "pass123", "Computer Science")
+
+    library.register_user("student", "S001", "Alice Johnson", "pass1", "Computer Science")
+    library.borrow_book("S001", "B001")
+    library.borrow_book("S001", "B002")
+    library.borrow_book("S001", "B003")
+
+    library.register_user("student", "S002", "Bob Smith", "pass2", "Mathematics")
+    library.borrow_book("S002", "B001")
+
+    library.register_user("student", "S003", "Charlie Davis", "pass3", "Computer Science")
+    library.borrow_book("S003", "B002")
+
     library.register_user("teacher", "T001", "Dr. Robert Brown", "pass456", "Computer Science")
     
     current_user = None
@@ -32,7 +43,7 @@ def main():
                 print("9. Exit")
             elif isinstance(current_user, Teacher):
                 print("1. Add Course Material")
-                print("2. Review Borrowed Books")
+                print("2. Review Student's Borrowed Books")
                 print("3. Search Books")
                 print("4. Borrow Book")
                 print("5. Return Book")
