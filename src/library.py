@@ -1,7 +1,7 @@
-# library.py
 from user import User
 from student import Student
 from teacher import Teacher
+from book import Book
 
 class Library:
     def __init__(self):
@@ -14,7 +14,7 @@ class Library:
             print("Book ID already exists!")
             return False
         
-        self.books[book_id] = [book_id, title, author, total_copies]
+        self.books[book_id] = Book(book_id, title, author, total_copies)
         print(f"Book '{title}' added successfully!")
         return True
     
@@ -22,6 +22,12 @@ class Library:
         if book_id not in self.books:
             print("Book ID does not exist!")
             return False
+        
+        # Check if any user has borrowed this book
+        for user_id, user in self.users.items():
+            if book_id in user.borrowed_books:
+                print("Cannot remove book. It is currently borrowed by a user!")
+                return False
         
         del self.books[book_id]
         print("Book removed successfully!")
@@ -57,13 +63,42 @@ class Library:
             return None
     
     def search_book(self, title):
-        # To be implemented in Sprint 2
-        pass
+        results = []
+        for book_id, book in self.books.items():
+            if title.lower() in book.title.lower():
+                results.append(book)
+        
+        return results
     
     def borrow_book(self, user_id, book_id):
-        # To be implemented in Sprint 2
-        pass
+        if user_id not in self.users:
+            print("User not found!")
+            return False
+        
+        if book_id not in self.books:
+            print("Book not found!")
+            return False
+        
+        user = self.users[user_id]
+        return user.borrow_book(book_id, self)
     
     def return_book(self, user_id, book_id):
-        # To be implemented in Sprint 2
-        pass
+        if user_id not in self.users:
+            print("User not found!")
+            return False
+        
+        if book_id not in self.books:
+            print("Book not found!")
+            return False
+        
+        user = self.users[user_id]
+        return user.return_book(book_id, self)
+    
+    def display_all_books(self):
+        if not self.books:
+            print("No books in the library!")
+            return
+        
+        print("\n=== All Books in Library ===")
+        for book_id, book in self.books.items():
+            print(book)

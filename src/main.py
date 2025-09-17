@@ -1,8 +1,8 @@
-# main.py - User Interface
 from library import Library
 from user import User
 from student import Student
 from teacher import Teacher
+from book import Book
 
 def main():
     library = Library()
@@ -10,6 +10,7 @@ def main():
     # Pre-populate with some data for testing
     library.add_book("B001", "Python Programming", "John Smith", 5)
     library.add_book("B002", "Data Structures", "Jane Doe", 3)
+    library.add_book("B003", "Algorithms", "Robert Johnson", 1)
     library.register_user("student", "S001", "Alice Johnson", "pass123", "Computer Science")
     library.register_user("teacher", "T001", "Dr. Robert Brown", "pass456", "Computer Science")
     
@@ -25,26 +26,33 @@ def main():
                 print("3. Search Books")
                 print("4. Borrow Book")
                 print("5. Return Book")
-                print("6. Logout")
-                print("7. Exit")
+                print("6. View All Books")
+                print("7. View My Borrowed Books")
+                print("8. Logout")
+                print("9. Exit")
             elif isinstance(current_user, Teacher):
                 print("1. Add Course Material")
                 print("2. Review Borrowed Books")
                 print("3. Search Books")
                 print("4. Borrow Book")
                 print("5. Return Book")
-                print("6. Logout")
-                print("7. Exit")
+                print("6. View All Books")
+                print("7. View My Borrowed Books")
+                print("8. Logout")
+                print("9. Exit")
             else:
                 print("1. Search Books")
                 print("2. Borrow Book")
                 print("3. Return Book")
-                print("4. Logout")
-                print("5. Exit")
+                print("4. View All Books")
+                print("5. View My Borrowed Books")
+                print("6. Logout")
+                print("7. Exit")
         else:
             print("1. Login")
             print("2. Register")
-            print("3. Exit")
+            print("3. View All Books")
+            print("4. Exit")
         
         choice = input("Enter your choice: ")
         
@@ -69,7 +77,10 @@ def main():
                 else:
                     print("Invalid user type!")
             
-            elif choice == "3":  # Exit
+            elif choice == "3":  # View All Books
+                library.display_all_books()
+            
+            elif choice == "4":  # Exit
                 print("Thank you for using the Library Management System!")
                 break
             
@@ -89,22 +100,48 @@ def main():
                     print(f"Recommended book: {recommendation}")
                 
                 elif choice == "3":  # Search Books
-                    # To be implemented in Sprint 2
-                    print("Search functionality will be available in Sprint 2")
+                    title = input("Enter book title to search: ")
+                    results = library.search_book(title)
+                    if results:
+                        print("Search results:")
+                        for book in results:
+                            print(book)
+                    else:
+                        print("No books found with that title.")
                 
                 elif choice == "4":  # Borrow Book
-                    # To be implemented in Sprint 2
-                    print("Borrow functionality will be available in Sprint 2")
+                    library.display_all_books()
+                    book_id = input("Enter book ID to borrow: ")
+                    library.borrow_book(current_user.user_id, book_id)
                 
                 elif choice == "5":  # Return Book
-                    # To be implemented in Sprint 2
-                    print("Return functionality will be available in Sprint 2")
+                    if not current_user.borrowed_books:
+                        print("You haven't borrowed any books!")
+                    else:
+                        print("Books you've borrowed:")
+                        for book_id in current_user.borrowed_books:
+                            if book_id in library.books:
+                                print(library.books[book_id])
+                        book_id = input("Enter book ID to return: ")
+                        library.return_book(current_user.user_id, book_id)
                 
-                elif choice == "6":  # Logout
+                elif choice == "6":  # View All Books
+                    library.display_all_books()
+                
+                elif choice == "7":  # View My Borrowed Books
+                    if not current_user.borrowed_books:
+                        print("You haven't borrowed any books!")
+                    else:
+                        print("Books you've borrowed:")
+                        for book_id in current_user.borrowed_books:
+                            if book_id in library.books:
+                                print(library.books[book_id])
+                
+                elif choice == "8":  # Logout
                     current_user = None
                     print("Logged out successfully!")
                 
-                elif choice == "7":  # Exit
+                elif choice == "9":  # Exit
                     print("Thank you for using the Library Management System!")
                     break
                 
@@ -123,22 +160,48 @@ def main():
                         print(book)
                 
                 elif choice == "3":  # Search Books
-                    # To be implemented in Sprint 2
-                    print("Search functionality will be available in Sprint 2")
+                    title = input("Enter book title to search: ")
+                    results = library.search_book(title)
+                    if results:
+                        print("Search results:")
+                        for book in results:
+                            print(book)
+                    else:
+                        print("No books found with that title.")
                 
                 elif choice == "4":  # Borrow Book
-                    # To be implemented in Sprint 2
-                    print("Borrow functionality will be available in Sprint 2")
+                    library.display_all_books()
+                    book_id = input("Enter book ID to borrow: ")
+                    library.borrow_book(current_user.user_id, book_id)
                 
                 elif choice == "5":  # Return Book
-                    # To be implemented in Sprint 2
-                    print("Return functionality will be available in Sprint 2")
+                    if not current_user.borrowed_books:
+                        print("You haven't borrowed any books!")
+                    else:
+                        print("Books you've borrowed:")
+                        for book_id in current_user.borrowed_books:
+                            if book_id in library.books:
+                                print(library.books[book_id])
+                        book_id = input("Enter book ID to return: ")
+                        library.return_book(current_user.user_id, book_id)
                 
-                elif choice == "6":  # Logout
+                elif choice == "6":  # View All Books
+                    library.display_all_books()
+                
+                elif choice == "7":  # View My Borrowed Books
+                    if not current_user.borrowed_books:
+                        print("You haven't borrowed any books!")
+                    else:
+                        print("Books you've borrowed:")
+                        for book_id in current_user.borrowed_books:
+                            if book_id in library.books:
+                                print(library.books[book_id])
+                
+                elif choice == "8":  # Logout
                     current_user = None
                     print("Logged out successfully!")
                 
-                elif choice == "7":  # Exit
+                elif choice == "9":  # Exit
                     print("Thank you for using the Library Management System!")
                     break
                 
@@ -147,22 +210,48 @@ def main():
             
             else:  # Generic user (shouldn't happen with current implementation)
                 if choice == "1":  # Search Books
-                    # To be implemented in Sprint 2
-                    print("Search functionality will be available in Sprint 2")
+                    title = input("Enter book title to search: ")
+                    results = library.search_book(title)
+                    if results:
+                        print("Search results:")
+                        for book in results:
+                            print(book)
+                    else:
+                        print("No books found with that title.")
                 
                 elif choice == "2":  # Borrow Book
-                    # To be implemented in Sprint 2
-                    print("Borrow functionality will be available in Sprint 2")
+                    library.display_all_books()
+                    book_id = input("Enter book ID to borrow: ")
+                    library.borrow_book(current_user.user_id, book_id)
                 
                 elif choice == "3":  # Return Book
-                    # To be implemented in Sprint 2
-                    print("Return functionality will be available in Sprint 2")
+                    if not current_user.borrowed_books:
+                        print("You haven't borrowed any books!")
+                    else:
+                        print("Books you've borrowed:")
+                        for book_id in current_user.borrowed_books:
+                            if book_id in library.books:
+                                print(library.books[book_id])
+                        book_id = input("Enter book ID to return: ")
+                        library.return_book(current_user.user_id, book_id)
                 
-                elif choice == "4":  # Logout
+                elif choice == "4":  # View All Books
+                    library.display_all_books()
+                
+                elif choice == "5":  # View My Borrowed Books
+                    if not current_user.borrowed_books:
+                        print("You haven't borrowed any books!")
+                    else:
+                        print("Books you've borrowed:")
+                        for book_id in current_user.borrowed_books:
+                            if book_id in library.books:
+                                print(library.books[book_id])
+                
+                elif choice == "6":  # Logout
                     current_user = None
                     print("Logged out successfully!")
                 
-                elif choice == "5":  # Exit
+                elif choice == "7":  # Exit
                     print("Thank you for using the Library Management System!")
                     break
                 
